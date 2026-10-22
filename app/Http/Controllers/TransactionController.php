@@ -30,7 +30,9 @@ class TransactionController extends Controller
             'type' => 'required|in:deposit,withdrawal,transfer',
             'amount' => 'required|numeric|min:1',
             'notes' => 'nullable|string|max:500',
-            'receiver_account_id' => 'required_if:type,transfer|exists:accounts,id|different:account_id',
+            
+            // FIXED: Added 'nullable|' to the beginning of this rule
+            'receiver_account_id' => 'nullable|required_if:type,transfer|exists:accounts,id|different:account_id',
         ]);
 
         $account = Account::findOrFail($validated['account_id']);

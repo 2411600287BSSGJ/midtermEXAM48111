@@ -18,6 +18,9 @@ class DashboardController extends Controller
             'total_accounts' => Account::count(),
             'total_money' => Account::sum('balance'),
             'total_transactions_today' => Transaction::whereDate('created_at', today())->count(),
+            
+            // Add this line below:
+            'total_transferred' => Transaction::where('type', 'transfer')->sum('amount'),
         ]);
     }
 }

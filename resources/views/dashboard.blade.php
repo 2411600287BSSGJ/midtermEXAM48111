@@ -17,13 +17,15 @@
             --text-muted: #6B7280;
             --success: #10B981;
             --warning: #F59E0B;
+            --purple: #8B5CF6;
         }
 
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
-            max-width: 900px;
+            max-width: 1100px;
+            /* Widened to fit 4 cards */
             margin: 0 auto;
             padding: 40px 20px;
             min-height: 100vh;
@@ -86,7 +88,7 @@
         /* Grid Layout for Cards */
         .stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 24px;
         }
 
@@ -127,6 +129,12 @@
             background-color: var(--warning);
         }
 
+        .card:nth-child(4)::before {
+            background-color: var(--purple);
+        }
+
+        /* New card color */
+
         .card h3 {
             margin: 0 0 16px;
             font-size: 13px;
@@ -134,6 +142,7 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
             font-weight: 600;
+            white-space: nowrap;
         }
 
         .card .value {
@@ -185,6 +194,11 @@
             <h3>Transactions Today</h3>
             <div class="value loading" id="total-transactions">—</div>
         </div>
+        <!-- NEW CARD ADDED HERE -->
+        <div class="card">
+            <h3>Total Transferred</h3>
+            <div class="value loading" id="total-transferred">—</div>
+        </div>
     </div>
 
     <script>
@@ -192,15 +206,19 @@
             fetch('/api/dashboard/stats')
                 .then(response => response.json())
                 .then(data => {
-                    // Remove loading class
+                    // Remove loading classes
                     document.getElementById('total-accounts').classList.remove('loading');
                     document.getElementById('total-money').classList.remove('loading');
                     document.getElementById('total-transactions').classList.remove('loading');
+                    document.getElementById('total-transferred').classList.remove('loading'); // Remove for new card
 
                     // Update values
                     document.getElementById('total-accounts').textContent = data.total_accounts;
                     document.getElementById('total-money').textContent = '$' + Number(data.total_money).toFixed(2);
                     document.getElementById('total-transactions').textContent = data.total_transactions_today;
+
+                    // Update new card value
+                    document.getElementById('total-transferred').textContent = '$' + Number(data.total_transferred).toFixed(2);
                 })
                 .catch(error => console.error('Error fetching stats:', error));
         }
